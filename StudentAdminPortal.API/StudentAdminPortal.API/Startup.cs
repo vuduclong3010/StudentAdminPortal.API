@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using StudentAdminPortal.API.DataModels;
 using StudentAdminPortal.API.Repositories;
 using System.IO;
+using FluentValidation.AspNetCore;
 
 namespace StudentAdminPortal.API
 {
@@ -36,6 +37,9 @@ namespace StudentAdminPortal.API
             });
 
             services.AddControllers();
+
+            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
             services.AddDbContext<StudentAdminContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("StudentAdminPortalDb")));
 
