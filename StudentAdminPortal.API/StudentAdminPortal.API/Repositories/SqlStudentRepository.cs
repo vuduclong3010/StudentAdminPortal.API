@@ -16,6 +16,7 @@ namespace StudentAdminPortal.API.Repositories
             _context = context;
         }
 
+        // Student
         public async Task<Student> GetStudentAsync(Guid studentId)
         {
             return await _context.Student.Include(nameof(Gender)).Include(nameof(Address))
@@ -26,6 +27,42 @@ namespace StudentAdminPortal.API.Repositories
         {
             return await _context.Student.Include(nameof(Gender)).Include(nameof(Address))
                 .ToListAsync();
+        }
+
+        // Check StudentId
+        public async Task<bool> Exists(Guid studentId)
+        {
+            return await _context.Student.AnyAsync(x => x.ID == studentId);
+        }
+
+        //Update Student Details
+        public async Task<Student> UpdateStudent(Guid studentId, Student request)
+        {
+            var existingStudent = await GetStudentAsync(studentId);
+            if(existingStudent != null)
+            {
+                existingStudent.FirstName = request.FirstName;
+                existingStudent.LastName = request.LastName;
+                existingStudent.DateOfBirth = request.DateOfBirth;
+                existingStudent.Email = request.Email;
+                existingStudent.Mobile = request.Mobile;
+                existingStudent.GenderId = request.GenderId;
+                existingStudent.Address.PhysicalAddress = request.Address.PhysicalAddress;
+                existingStudent.Address.PostalAddress = request.Address.PostalAddress;
+
+                await _context.SaveChangesAsync();
+                return existingStudent;
+            }
+
+            return null;
+        }
+
+
+
+        // Gender
+        public async Task<List<Gender>> GetGendersAsync()
+        {
+            return await _context.Gender.ToListAsync();
         }
     }
 }
