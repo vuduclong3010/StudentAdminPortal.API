@@ -24,6 +24,9 @@ namespace StudentAdminPortal.API.Profiles
 
             CreateMap<UpdateStudentRequest, DataModel.Student>()
                 .AfterMap<UpdateStudentRequestAfterMap>();
+
+            CreateMap<AddStudentRequest, DataModel.Student>()
+                .AfterMap<AddStudentRequestAfterMap>();
         }
     }
 }

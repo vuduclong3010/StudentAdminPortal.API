@@ -5,6 +5,7 @@ using StudentAdminPortal.API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DateModels = StudentAdminPortal.API.DataModels;
 
 namespace StudentAdminPortal.API.Controllers
 {
@@ -70,7 +71,7 @@ namespace StudentAdminPortal.API.Controllers
         }
 
         [HttpGet]
-        [Route("[controller]/{studentId:guid}")]
+        [Route("[controller]/{studentId:guid}"), ActionName("GetStudentAsync")]
         public async Task<IActionResult> GetStudentAsync([FromRoute] Guid studentId)
         {
             // Fetch Student Details
@@ -115,6 +116,17 @@ namespace StudentAdminPortal.API.Controllers
             }
 
             return NotFound();
+        }
+
+        // Add
+        [HttpPost]
+        [Route("[controller]/Add")]
+        public async Task<IActionResult> AddStudentAsync([FromBody] AddStudentRequest request)
+        {
+            var student = await _studentRepository.AddStudent(_mapper.Map<DateModels.Student>(request));
+
+            return CreatedAtAction(nameof(GetStudentAsync), new { studentId = student.ID },
+                _mapper.Map<Student>(student));
         }
     }
 }
